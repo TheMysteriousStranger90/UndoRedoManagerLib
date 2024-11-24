@@ -40,14 +40,11 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore UndoRedoManagerLib/UndoRedoManagerLib.csproj
     - name: Build and Pack NuGet package
+      run: dotnet build UndoRedoManagerLib/UndoRedoManagerLib.csproj -c Release
+    - name: Pack the NuGet package
       run: dotnet pack UndoRedoManagerLib/UndoRedoManagerLib.csproj -p:Version='${{ steps.gitversion.outputs.SemVer }}' -c Release
-    - name: Upload NuGet package to GitHub
-      uses: actions/upload-artifact@v4
-      with:
-        name: nugetPackage
-        path: UndoRedoManagerLib/UndoRedoManagerLib/bin/Release/ 
         
   release:
     runs-on: ubuntu-latest    
