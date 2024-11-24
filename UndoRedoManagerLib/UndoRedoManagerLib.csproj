@@ -4,6 +4,26 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageId>BohdanHarabadzhyu.UndoRedoManagerLib</PackageId>
+        <Version>0.0.1</Version>
+        <Title>UndoRedoManagerLib</Title>
+        <Authors>Bohdan Harabadzhyu</Authors>
+        <Description>UndoRedoManager is a .NET library for managing undo and redo operations. It provides a mechanism to track changes to objects and collections, allowing you to undo and redo those changes as needed. This library is useful for applications that require support for undo/redo functionality.</Description>
+        <PackageIcon>Cover.png</PackageIcon>
+        <RepositoryUrl>https://github.com/TheMysteriousStranger90/UndoRedoManagerLib</RepositoryUrl>
+        <PackageTags>undo-redo</PackageTags>
+        <PackageReleaseNotes>Version 0.0.1 (Alpha):
+- (Released: 24 November 2024) - Initial release with core features.</PackageReleaseNotes>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="Cover.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
 
 </Project>
