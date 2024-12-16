@@ -8,6 +8,12 @@ public class UndoRedoManager
     private readonly Stack<IUndoRedoCommand> _undoStack = new();
     private readonly Stack<IUndoRedoCommand> _redoStack = new();
     private UndoRedoTransaction? _currentTransaction;
+    private readonly int _maxStackSize;
+
+    public UndoRedoManager(int maxStackSize = 100)
+    {
+        _maxStackSize = maxStackSize;
+    }
 
     /// <summary>
     /// Begins a new transaction.
@@ -47,6 +53,10 @@ public class UndoRedoManager
         }
         else
         {
+            if (_undoStack.Count >= _maxStackSize)
+            {
+                _undoStack.RemoveAt(0);
+            }
             _undoStack.Push(command);
             _redoStack.Clear();
         }

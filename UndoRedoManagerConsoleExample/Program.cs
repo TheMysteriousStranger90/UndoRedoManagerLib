@@ -7,7 +7,7 @@ class Program
     static void Main(string[] args)
     {
         var context = new UndoRedoContext();
-        var manager = new UndoRedoManager();
+        var manager = new UndoRedoManager(1000);
 
         var address = new Address("123 Main St", "Springfield");
         var person = new Person("John Doe", 30, address);
