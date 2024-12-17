@@ -6,18 +6,23 @@
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>BohdanHarabadzhyu.UndoRedoManagerLib</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Title>UndoRedoManagerLib</Title>
         <Authors>Bohdan Harabadzhyu</Authors>
         <Description>UndoRedoManager is a .NET library for managing undo and redo operations. It provides a mechanism to track changes to objects and collections, allowing you to undo and redo those changes as needed. This library is useful for applications that require support for undo/redo functionality.</Description>
         <PackageIcon>Cover.png</PackageIcon>
         <RepositoryUrl>https://github.com/TheMysteriousStranger90/UndoRedoManagerLib</RepositoryUrl>
         <PackageTags>undo-redo</PackageTags>
-        <PackageReleaseNotes>Version 0.0.1 (Alpha):
+        <PackageReleaseNotes>Version 0.0.2 (Alpha):
+            - (Released: 17 December 2024)
+            - Added generic ChangePropertyCommand for simplified property changes
+            - Implemented AutoCommandGrouper for automatic command grouping
+            - Added configurable maximum stack size limit
+            
+            Version 0.0.1 (Alpha):
 - (Released: 24 November 2024) - Initial release with core features.</PackageReleaseNotes>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 

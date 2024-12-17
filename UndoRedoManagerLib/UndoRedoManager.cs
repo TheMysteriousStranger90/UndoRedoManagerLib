@@ -8,6 +8,16 @@ public class UndoRedoManager
     private readonly Stack<IUndoRedoCommand> _undoStack = new();
     private readonly Stack<IUndoRedoCommand> _redoStack = new();
     private UndoRedoTransaction? _currentTransaction;
+    private readonly int _maxStackSize;
+    private readonly AutoCommandGrouper _commandGrouper;
+    private bool _isGroupingEnabled;
+
+    public UndoRedoManager(int maxStackSize = 100, bool enableGrouping = true)
+    {
+        _maxStackSize = maxStackSize;
+        _isGroupingEnabled = enableGrouping;
+        _commandGrouper = new AutoCommandGrouper();
+    }
 
     /// <summary>
     /// Begins a new transaction.
@@ -41,14 +51,53 @@ public class UndoRedoManager
     public void Execute(IUndoRedoCommand command)
     {
         command.Execute();
+
         if (_currentTransaction != null)
         {
             _currentTransaction.AddCommand(command);
+            return;
+        }
+
+        if (_isGroupingEnabled && _commandGrouper.ShouldGroup(command))
+        {
+            _commandGrouper.AddToGroup(command);
+            var groupTransaction = _commandGrouper.CreateGroupTransaction();
+            
+            if (groupTransaction != null)
+            {
+                AddToUndoStack(groupTransaction);
+                _commandGrouper.ClearGroup();
+                return;
+            }
         }
         else
         {
-            _undoStack.Push(command);
-            _redoStack.Clear();
+            _commandGrouper.ClearGroup();
+            _commandGrouper.AddToGroup(command);
+        }
+
+        AddToUndoStack(command);
+    }
+    
+    private void AddToUndoStack(IUndoRedoCommand command)
+    {
+        if (_undoStack.Count >= _maxStackSize)
+        {
+            _undoStack.RemoveAt(0);
+        }
+        _undoStack.Push(command);
+        _redoStack.Clear();
+    }
+
+    /// <summary>
+    /// Enables or disables automatic command grouping.
+    /// </summary>
+    public void SetGroupingEnabled(bool enabled)
+    {
+        _isGroupingEnabled = enabled;
+        if (!enabled)
+        {
+            _commandGrouper.ClearGroup();
         }
     }
 
