@@ -91,7 +91,7 @@ class Program
     static void Main(string[] args)
     {
         var context = new UndoRedoContext();
-        var manager = new UndoRedoManager();
+        var manager = new UndoRedoManager(1000, enableGrouping: false); // Stack size and Disable grouping for this example
 
         var address = new Address("123 Main St", "Springfield");
         var person = new Person("John Doe", 30, address);
@@ -137,7 +137,65 @@ class Program
 }
 ```
 
+### Using Groups Of Similar Commands
+You can group similar commands together to simplify the undo/redo process. This is useful when you have multiple commands that are related and should be undone/redone together. Example:
 
+```csharp
+class Program
+{
+    static void Main(string[] args)
+    {
+        var context = new UndoRedoContext();
+        var manager = new UndoRedoManager(1000, enableGrouping: true); // Enable grouping
+    
+        var address = new Address("123 Main St", "Springfield");
+        var person = new Person("John Doe", 30, address);
+
+        Console.WriteLine("Initial state:");
+        Console.WriteLine(person);
+
+        // First group: Name changes (will be grouped due to same type and timing)
+        manager.Execute(new ChangeNameCommand(person, "Jane Doe"));
+        Thread.Sleep(100); // Small delay, still within grouping window
+        manager.Execute(new ChangeNameCommand(person, "Jane Smith"));
+    
+        Console.WriteLine("\nAfter name changes:");
+        Console.WriteLine(person);
+
+        // Second group: Age changes
+        Thread.Sleep(600); // Delay longer than grouping window (500ms default)
+        manager.Execute(new ChangeAgeCommand(person, 25));
+        Thread.Sleep(100);
+        manager.Execute(new ChangeAgeCommand(person, 26));
+
+        Console.WriteLine("\nAfter age changes:");
+        Console.WriteLine(person);
+
+        // Third group: Address changes
+        Thread.Sleep(600);
+        manager.Execute(new ChangePropertyCommand<Address>(
+            value => person.Address = value,
+            person.Address,
+            new Address("456 Elm St", "Shelbyville")));
+
+        Console.WriteLine("\nAfter all changes:");
+        Console.WriteLine(person);
+
+        // Undo operations - each group will be undone as a single unit
+        manager.Undo(); // Undoes address change
+        Console.WriteLine("\nAfter first undo (address):");
+        Console.WriteLine(person);
+
+        manager.Undo(); // Undoes age changes group
+        Console.WriteLine("\nAfter second undo (age):");
+        Console.WriteLine(person);
+
+        manager.Undo(); // Undoes name changes group
+        Console.WriteLine("\nAfter third undo (name):");
+        Console.WriteLine(person);
+    }
+}
+```
 
 ## Future Development
 
